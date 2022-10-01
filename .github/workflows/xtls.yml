@@ -1,6 +1,7 @@
 name: build XTLS images
 
 on:
+  workflow_dispatch:
   push:
 
 jobs:
