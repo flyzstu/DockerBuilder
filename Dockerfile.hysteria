@@ -1,0 +1,8 @@
+FROM teddysun/hysteria as builder
+FROM ubuntu:20.04
+COPY --from=builder  /usr/bin/hysteria /usr/local/bin/hysteria
+WORKDIR /usr/local/bin/
+RUN set -ex \
+&& apt-get update \
+&& apt-get install wget ca-certificates -y
+ENTRYPOINT ["/usr/local/bin/hysteria"]
