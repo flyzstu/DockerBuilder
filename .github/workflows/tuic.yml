@@ -20,7 +20,7 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Get XTLS version and build
+      - name: Get tuic version and build
         env:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
           HUB_TOKEN: ${{ secrets.HUB_TOKEN }}

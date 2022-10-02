@@ -1,9 +1,5 @@
 #!/bin/bash
 arch=`arch`
-# echo $arch
-# set -ex \
-# && apt-get update \
-# && apt-get install wget ca-certificates -y
 cd /tmp/
 if [[ "$arch" == "x86_64" ]]; then
   version=`wget -qO- -t1 -T2 "https://api.github.com/repos/EAimTY/tuic/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'`
