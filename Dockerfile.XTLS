@@ -3,7 +3,7 @@ COPY build.XTLS /usr/local/bin/build.sh
 WORKDIR /usr/local/bin/ 
 RUN set -ex \
   && apt-get update \
-  && apt-get install wget ca-certificates -y \
+  && apt-get install wget ca-certificates unzip -y \
   && wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat \
   && wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
 RUN ["/usr/local/bin/build.sh"]
