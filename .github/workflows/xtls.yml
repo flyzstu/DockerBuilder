@@ -27,6 +27,8 @@ jobs:
         run: |
           cp Dockerfile.XTLS Dockerfile
           echo $GHCR_TOKEN | docker login ghcr.io -u ${{github.repository_owner}} --password-stdin
+          docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/flyzstu/xray --push .
           docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/flyzstu/xray:`wget -qO- -t1 -T2 "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'` --push .
           echo $HUB_TOKEN | docker login -u fly97 --password-stdin
-          docker buildx build --platform linux/amd64,linux/arm64 -t docker.io/fly97/xray:`wget -qO- -t1 -T2 "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'` --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t fly97/xray --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t fly97/xray:`wget -qO- -t1 -T2 "https://api.github.com/repos/XTLS/Xray-core/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'` --push .
