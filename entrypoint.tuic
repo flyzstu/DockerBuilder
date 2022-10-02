@@ -1,0 +1,47 @@
+#!/bin/bash
+arch=`arch`
+# echo $arch
+# set -ex \
+# && apt-get update \
+# && apt-get install wget ca-certificates -y
+cd /tmp/
+if [[ "$arch" == "x86_64" ]]; then
+  version=`wget -qO- -t1 -T2 "https://api.github.com/repos/EAimTY/tuic/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'`
+  echo "Downloading tuic-server-$arch..."
+  wget -qO tuic-server-$version-$arch-linux-gnu "https://github.com/EAimTY/tuic/releases/download/$version/tuic-server-$version-$arch-linux-gnu"
+  wget -qO tuic-server-$version-$arch-linux-gnu.sha256sum "https://github.com/EAimTY/tuic/releases/download/$version/tuic-server-$version-$arch-linux-gnu.sha256sum"
+  status=`sha256sum -c <(grep tuic-server-$version-$arch-linux-gnu tuic-server-$version-$arch-linux-gnu.sha256sum)`
+  if [ $? -ne 0 ]; then
+    echo "server check sha256sum error!"
+    exit -1
+  fi
+  install tuic-server-$version-$arch-linux-gnu /usr/local/bin/tuic-server
+  echo "Downloading tuic-client-$arch..."
+  wget -qO tuic-client-$version-$arch-linux-gnu "https://github.com/EAimTY/tuic/releases/download/$version/tuic-client-$version-$arch-linux-gnu"
+  wget -qO tuic-client-$version-$arch-linux-gnu.sha256sum "https://github.com/EAimTY/tuic/releases/download/$version/tuic-client-$version-$arch-linux-gnu.sha256sum"
+  if [ $? -ne 0 ]; then
+    echo "client check sha256sum error!"
+    exit -1
+  fi
+  install tuic-client-$version-$arch-linux-gnu /usr/local/bin/tuic-client
+elif [[ "$arch" == "aarch64" ]]; then
+  version=`wget -qO- -t1 -T2 "https://api.github.com/repos/EAimTY/tuic/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'`
+  echo "Downloading tuic-server-$arch..."
+  wget -qO tuic-server-$version-$arch-linux-gnu "https://github.com/EAimTY/tuic/releases/download/$version/tuic-server-$version-$arch-linux-gnu"
+  wget -qO tuic-server-$version-$arch-linux-gnu.sha256sum "https://github.com/EAimTY/tuic/releases/download/$version/tuic-server-$version-$arch-linux-gnu.sha256sum"
+  status=`sha256sum -c <(grep tuic-server-$version-$arch-linux-gnu tuic-server-$version-$arch-linux-gnu.sha256sum)`
+  if [ $? -ne 0 ]; then
+    echo "server check sha256sum error!"
+    exit -1
+  fi
+  install tuic-server-$version-$arch-linux-gnu /usr/local/bin/tuic-server
+  echo "Downloading tuic-client-$arch..."
+  wget -qO tuic-client-$version-$arch-linux-gnu "https://github.com/EAimTY/tuic/releases/download/$version/tuic-client-$version-$arch-linux-gnu"
+  wget -qO tuic-client-$version-$arch-linux-gnu.sha256sum "https://github.com/EAimTY/tuic/releases/download/$version/tuic-client-$version-$arch-linux-gnu.sha256sum"
+  if [ $? -ne 0 ]; then
+    echo "client check sha256sum error!"
+    exit -1
+  fi
+  install tuic-client-$version-$arch-linux-gnu /usr/local/bin/tuic-client
+fi
+rm -rf /tmp/*
