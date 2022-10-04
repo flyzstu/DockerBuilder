@@ -1,0 +1,35 @@
+name: build naiveproxy images
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        # Add support for more platforms with QEMU (optional)
+        # https://github.com/docker/setup-qemu-action
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Get hysteria version and build
+        env:
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          HUB_TOKEN: ${{ secrets.HUB_TOKEN }}
+        run: |
+          cp Dockerfile.naiveproxy Dockerfile
+          chmod +x build.naiveproxy
+          echo $GHCR_TOKEN | docker login ghcr.io -u ${{github.repository_owner}} --password-stdin
+          docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/flyzstu/naiveproxy --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/flyzstu/naiveproxy:`wget -qO- -t1 -T2 "https://api.github.com/repos/klzgrad/naiveproxy/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'` --push .
+          echo $HUB_TOKEN | docker login -u fly97 --password-stdin
+          docker buildx build --platform linux/amd64,linux/arm64 -t fly97/naiveproxy --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t fly97/naiveproxy:`wget -qO- -t1 -T2 "https://api.github.com/repos/klzgrad/naiveproxy/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'` --push .

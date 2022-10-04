@@ -1,0 +1,23 @@
+#!/bin/bash
+arch=`arch`
+cd /tmp/
+if [[ "$arch" == "x86_64" ]]; then
+  version=`wget -qO- -t1 -T2 "https://api.github.com/repos/klzgrad/naiveproxy/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'`
+  echo "Downloading naiveproxy..."
+  wget -q "https://github.com/klzgrad/naiveproxy/releases/download/$version/naiveproxy-$version-linux-x64.tar.xz"
+  tar xf naiveproxy-$version-linux-x64 && install naiveproxy-$version-linux-x64/naive /usr/local/bin/
+  if [ $? -ne 0 ]; then
+    echo "install error!"
+    exit -1
+  fi
+elif [[ "$arch" == "aarch64" ]]; then
+  version=`wget -qO- -t1 -T2 "https://api.github.com/repos/klzgrad/naiveproxy/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g'`
+  echo "Downloading naiveproxy..."
+  wget -q "https://github.com/klzgrad/naiveproxy/releases/download/$version/naiveproxy-$version-linux-arm64.tar.xz"
+  tar xf naiveproxy-$version-linux-arm64 && install naiveproxy-$version-linux-arm64/naive /usr/local/bin/
+  if [ $? -ne 0 ]; then
+    echo "install error!"
+    exit -1
+  fi
+fi
+rm -rf /tmp/*
