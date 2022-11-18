@@ -6,6 +6,7 @@ FROM ubuntu:20.04
 COPY --from=builder /go/caddy /usr/local/bin/caddy
 COPY build.naiveproxy /usr/local/bin/build.sh
 RUN set -ex \
+  && chmod +x /usr/local/bin/caddy \
   && apt-get update \
   && apt-get install wget libnss3-dev ca-certificates -y
-RUN ["/usr/local/bin/build.sh"]
+ENTRYPOINT [ "caddy", "start" ] 
