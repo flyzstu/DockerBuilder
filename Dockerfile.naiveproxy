@@ -9,4 +9,4 @@ RUN set -ex \
   && chmod +x /usr/local/bin/caddy \
   && apt-get update \
   && apt-get install wget libnss3-dev ca-certificates -y
-ENTRYPOINT [ "caddy", "start" ] 
+ENTRYPOINT [ "caddy", "run" ] 
